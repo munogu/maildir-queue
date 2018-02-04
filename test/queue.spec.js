@@ -1,7 +1,6 @@
 // module dependencies
 const assert = require('chai').assert
 const path = require('path')
-const async = require('async')
 const fs = require('fs-extra')
 const Queue = require('../lib/queue')
 
@@ -19,13 +18,11 @@ describe('queue', function () {
       assert.isFunction(queue.count)
     })
     it('add items', function (done) {
-      async.times(10, (i, next) => {
-        queue.add({
-          message: 'item ' + i
-        }).then(item => next(null, item)).catch(next)
-      }, (err, items) => {
-        // error handler
-        if (err) return done(err)
+      let promises = []
+      for (let i = 0; i < 10; i++) {
+        promises.push(queue.add({ message: 'item ' + i }))
+      }
+      Promise.all(promises).then(items => {
         // get first item
         let item = items.pop()
         assert.isObject(item)
@@ -109,6 +106,19 @@ describe('queue', function () {
           let err = new Error('Nope')
           return Promise.reject(err)
         }).catch(() => {})
+      })
+    })
+    it('unreadable file', function () {
+      let now = new Date()
+      let filename = now.getTime() + '-ABCDEF0123456789.json'
+      let data = JSON.stringify({})
+      // create a "fake" file
+      return fs.writeFile(path.join(queue.new, filename), data, {
+        mode: 0o300
+      }).then(() => {
+        return queue.pop().catch(err => {
+          assert.equal(err.code, 'EACCES')
+        })
       })
     })
   })
