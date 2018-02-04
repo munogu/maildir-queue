@@ -1,4 +1,4 @@
-# Maildir queue
+# Maildir queue [![Build Status](https://travis-ci.org/munogu/maildir-queue.svg?branch=master)](https://travis-ci.org/munogu/maildir-queue)
 
 File system backed lock-free and atomic message queue for Node.js. Stores messages using Maildir format to avoid using file locks.
 
