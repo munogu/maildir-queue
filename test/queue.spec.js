@@ -6,72 +6,110 @@ const fs = require('fs-extra')
 const Queue = require('../lib/queue')
 
 // describe test
-let queue
 describe('queue', function () {
-  before(function () {
-    queue = new Queue('test')
-  })
-  it('check methods', function () {
-    assert.isFunction(queue.add)
-    assert.isFunction(queue.pop)
-    assert.isFunction(queue.list)
-    assert.isFunction(queue.count)
-  })
-  it('add items', function (done) {
-    async.times(10, (i, next) => {
-      queue.add({
-        message: 'item ' + i
-      }).then(item => next(null, item)).catch(next)
-    }, (err, items) => {
-      // error handler
-      if (err) return done(err)
-      // get first item
-      let item = items.pop()
-      assert.isObject(item)
-      assert.isString(item.id)
-      assert.isObject(item.payload)
-      assert.isFinite(item.retry)
-      assert.instanceOf(item.createdAt, Date)
-      assert.instanceOf(item.updatedAt, Date)
-      done()
+  describe('default options', function () {
+    let queue
+    before(function () {
+      queue = new Queue('test')
+    })
+    it('check methods', function () {
+      assert.isFunction(queue.add)
+      assert.isFunction(queue.pop)
+      assert.isFunction(queue.list)
+      assert.isFunction(queue.count)
+    })
+    it('add items', function (done) {
+      async.times(10, (i, next) => {
+        queue.add({
+          message: 'item ' + i
+        }).then(item => next(null, item)).catch(next)
+      }, (err, items) => {
+        // error handler
+        if (err) return done(err)
+        // get first item
+        let item = items.pop()
+        assert.isObject(item)
+        assert.isString(item.id)
+        assert.isObject(item.payload)
+        assert.isFinite(item.retry)
+        assert.instanceOf(item.createdAt, Date)
+        assert.instanceOf(item.updatedAt, Date)
+        done()
+      })
+    })
+    it('count items', function () {
+      return queue.count(count => {
+        assert.isAbove(count, 0)
+      })
+    })
+    it('pop item', function () {
+      return queue.pop(item => {
+        assert.isObject(item)
+        assert.isObject(item.payload)
+      })
+    })
+    it('file name validation', function () {
+      return Promise.all([
+        fs.writeFile(path.join(queue.new, '000000-test.json'), 'Hello'),
+        fs.writeFile(path.join(queue.new, '1517771214392-test.yml'), 'Hello')
+      ])
+    })
+    it('pop item fail', function () {
+      return queue.pop(item => {
+        let err = new Error('item failed')
+        err.code = 'EFOOBAR'
+        return Promise.reject(err)
+      }).catch(err => {
+        assert.equal(err.code, 'EFOOBAR')
+      })
+    })
+    it('pop item sync fail', function () {
+      return queue.pop(item => {
+        throw new Error('item failed')
+      }).catch(() => {})
+    })
+    it('item expired ttl', function () {
+      let now = new Date('2017-01-01')
+      let filename = now.getTime() + '-ABCDEF0123456789.json'
+      let data = JSON.stringify({})
+      // create a "fake" old file
+      return fs.writeFile(path.join(queue.new, filename), data).then(() => {
+        return queue.list()
+      })
+    })
+    it('fail at unlink', function () {
+      return queue.pop(item => {
+        let filename = item.updatedAt.getTime() + '-' + item.id + '.json'
+        return fs.unlink(path.join(queue.cur, filename))
+      })
+    })
+    it('race condition', function () {
+      let ids = []
+      let handler = item => ids.push(item.id)
+      let promises = []
+      for (let i = 0; i < 25; i++) {
+        promises.push(queue.pop(handler))
+      }
+      return Promise.all(promises).then(() => {
+        let unique = ids.filter((val, i, self) => self.indexOf(val) === i)
+        assert.equal(unique.length, ids.length)
+      })
     })
   })
-  it('count items', function () {
-    return queue.count(count => {
-      assert.isAbove(count, 0)
+  describe('no retry', function () {
+    let queue
+    before(function () {
+      queue = new Queue('test-no-retry', {
+        retries: 0
+      })
     })
-  })
-  it('pop item', function () {
-    return queue.pop(item => {
-      assert.isObject(item)
-      assert.isObject(item.payload)
-    })
-  })
-  it('file name validation', function () {
-    return Promise.all([
-      fs.writeFile(path.join(queue.new, '000000-test.json'), 'Hello'),
-      fs.writeFile(path.join(queue.new, '1517771214392-test.yml'), 'Hello')
-    ])
-  })
-  it('pop item fail', function () {
-    return queue.pop(item => {
-      let err = new Error('item failed')
-      err.code = 'EFOOBAR'
-      return Promise.reject(err)
-    }).catch(err => {
-      assert.equal(err.code, 'EFOOBAR')
-    })
-  })
-  it('race condition', function () {
-    let ids = []
-    let handler = item => ids.push(item.id)
-    let promises = []
-    for (let i = 0; i < 25; i++) {
-      promises.push(queue.pop(handler))
-    }
-    return Promise.all(promises).then(() => {
-      let unique = ids.filter((val, index, self) => self.indexOf(val) === index)
-      assert.equal(unique.length, ids.length)
+    it('pop item fail', function () {
+      return queue.add({ hello: 'world' }).then(() => {
+        return queue.pop(item => {
+          let err = new Error('Nope')
+          return Promise.reject(err)
+        }).catch(() => {})
+      })
     })
   })
 })
