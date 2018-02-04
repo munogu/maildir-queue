@@ -1,8 +1,8 @@
-# Maildir queue [![Build Status][travis-badge]](travis-url) [![Coverage Status][coveralls-badge]](coveralls-url)
+# Maildir queue [![Build Status][travis-badge]][travis-url] [![Coverage Status][coveralls-badge]][coveralls-url]
 
 File system backed lock-free and atomic message queue for Node.js. Stores messages using Maildir format to avoid using file locks.
 
-[![Standard - JavaScript Style Guide][standard-badge]](standard-url)
+[![Standard - JavaScript Style Guide][standard-badge]][standard-url]
 
 - [Requirements](#requirements)
 - [Installation](#installation)
