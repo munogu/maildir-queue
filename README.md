@@ -1,8 +1,8 @@
-# Maildir queue [![Build Status](https://travis-ci.org/munogu/maildir-queue.svg?branch=master)](https://travis-ci.org/munogu/maildir-queue) [![Coverage Status](https://coveralls.io/repos/github/munogu/maildir-queue/badge.svg?branch=master)](https://coveralls.io/github/munogu/maildir-queue?branch=master)
+# Maildir queue [![Build Status][travis-badge]](travis-url) [![Coverage Status][coveralls-badge]](coveralls-url)
 
 File system backed lock-free and atomic message queue for Node.js. Stores messages using Maildir format to avoid using file locks.
 
-[![Standard - JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+[![Standard - JavaScript Style Guide][standard-badge]](standard-url)
 
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -23,7 +23,7 @@ $ npm install maildir-queue
 
 ## Quick Start
 
-```js
+```javascript
 // module dependencies
 const Queue = require('maildir-queue')
 
@@ -33,7 +33,7 @@ let queue = new Queue('your_queue_name')
 
 ## Usage
 
-```js
+```javascript
 // module dependencies
 const Queue = require('maildir-queue')
 
@@ -65,7 +65,7 @@ queue.pop(item => {
 
 ### add(payload = object) - Promise
 
-```js
+```javascript
 queue.add({
   this: 'is',
   the: 'payload object'
@@ -74,7 +74,7 @@ queue.add({
 
 ### pop(handler = function) - Promise
 
-```js
+```javascript
 queue.pop(item => {
   console.log('received item with id %s', item.id)
 })
@@ -84,7 +84,7 @@ queue.pop(item => {
 
 Returns total count of items in the queue. 
 
-```js
+```javascript
 queue.count().then(count => {
   console.log('%s item(s) found', count)
 })
@@ -96,5 +96,11 @@ Maildir queue along with many of the libraries it's built with support the **DEB
 
 For example to see all maildir-queue specific debugging information just pass `DEBUG=queue*` and upon boot you'll see the list of middleware used, among other things.
 
+[travis-badge]: https://img.shields.io/travis/munogu/maildir-queue.svg "Build Status"
+[travis-url]: https://travis-ci.org/munogu/maildir-queue
+[coveralls-badge]: https://img.shields.io/coveralls/github/munogu/maildir-queue.svg "Coverage Status"
+[coveralls-url]: https://coveralls.io/github/munogu/maildir-queue
+[standard-badge]: https://cdn.rawgit.com/feross/standard/master/badge.svg "Standard - JavaScript Style Guide"
+[standard-url]: https://github.com/feross/standard
 [node-url]: https://nodejs.org
 [debug-url]: https://github.com/visionmedia/debug
