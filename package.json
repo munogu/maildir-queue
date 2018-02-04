@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index",
     "test": "NODE_ENV=test mocha --recursive 'test/**/*.spec.js'",
-    "coverage": "NODE_ENV=test istanbul cover _mocha -- --recursive --reporter mocha-circleci-reporter"
+    "coverage": "NODE_ENV=test istanbul cover _mocha -- --recursive"
   },
   "author": "Eymen Gunay <eymen@egunay.com>",
   "license": "MIT",
