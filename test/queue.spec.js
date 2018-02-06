@@ -47,8 +47,8 @@ describe('queue', function () {
     })
     it('file name validation', function () {
       return Promise.all([
-        fs.writeFile(path.join(queue.new, '000000-test.json'), 'Hello'),
-        fs.writeFile(path.join(queue.new, '1517771214392-test.yml'), 'Hello')
+        fs.writeFile(path.join(queue.new, '000000_test.json'), 'Hello'),
+        fs.writeFile(path.join(queue.new, '1517771214392_test.yml'), 'Hello')
       ])
     })
     it('pop item fail', function () {
@@ -69,7 +69,7 @@ describe('queue', function () {
     })
     it('item expired ttl', function () {
       let now = new Date('2017-01-01')
-      let filename = now.getTime() + '-ABCDEF0123456789.json'
+      let filename = now.getTime() + '_ABCDEF0123456789.json'
       let data = JSON.stringify({})
       // create a "fake" old file
       return fs.writeFile(path.join(queue.new, filename), data).then(() => {
@@ -78,7 +78,7 @@ describe('queue', function () {
     })
     it('fail at unlink', function () {
       return queue.pop(item => {
-        let filename = item.updatedAt.getTime() + '-' + item.id + '.json'
+        let filename = item.updatedAt.getTime() + '_' + item.id + '.json'
         return fs.unlink(path.join(queue.cur, filename))
       })
     })
@@ -112,7 +112,7 @@ describe('queue', function () {
     })
     it('unreadable file', function () {
       let now = new Date()
-      let filename = now.getTime() + '-ABCDEF0123456789.json'
+      let filename = now.getTime() + '_ABCDEF0123456789.json'
       let data = JSON.stringify({})
       // create a "fake" file
       return fs.writeFile(path.join(queue.new, filename), data, {
