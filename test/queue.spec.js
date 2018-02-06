@@ -63,7 +63,9 @@ describe('queue', function () {
     it('pop item sync fail', function () {
       return queue.pop(item => {
         throw new Error('item failed')
-      }).catch(() => {})
+      }).catch(err => {
+        assert.isObject(err.item)
+      })
     })
     it('item expired ttl', function () {
       let now = new Date('2017-01-01')
