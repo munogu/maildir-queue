@@ -18,14 +18,14 @@ File system backed lock-free and atomic message queue for Node.js. Stores messag
 ## Installation
 
 ```
-$ npm install maildir-queue
+$ npm install @munogu/maildir-queue
 ```
 
 ## Quick Start
 
 ```javascript
 // module dependencies
-const Queue = require('maildir-queue')
+const Queue = require('@munogu/maildir-queue')
 
 // initialize queue
 let queue = new Queue('your_queue_name')
@@ -35,7 +35,7 @@ let queue = new Queue('your_queue_name')
 
 ```javascript
 // module dependencies
-const Queue = require('maildir-queue')
+const Queue = require('@munogu/maildir-queue')
 
 // queue options
 let options = {
@@ -96,10 +96,10 @@ Maildir queue along with many of the libraries it's built with support the **DEB
 
 For example to see all maildir-queue specific debugging information just pass `DEBUG=queue*` and upon boot you'll see the list of middleware used, among other things.
 
-[travis-badge]: https://img.shields.io/travis/munogu/maildir-queue.svg "Build Status"
-[travis-url]: https://travis-ci.org/munogu/maildir-queue
-[coveralls-badge]: https://img.shields.io/coveralls/github/munogu/maildir-queue.svg "Coverage Status"
-[coveralls-url]: https://coveralls.io/github/munogu/maildir-queue
+[travis-badge]: https://img.shields.io/travis/munogu/node-maildir-queue.svg "Build Status"
+[travis-url]: https://travis-ci.org/munogu/node-maildir-queue
+[coveralls-badge]: https://img.shields.io/coveralls/github/munogu/node-maildir-queue.svg "Coverage Status"
+[coveralls-url]: https://coveralls.io/github/munogu/node-maildir-queue
 [standard-badge]: https://cdn.rawgit.com/feross/standard/master/badge.svg "Standard - JavaScript Style Guide"
 [standard-url]: https://github.com/feross/standard
 [node-url]: https://nodejs.org

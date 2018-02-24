@@ -8,8 +8,16 @@
     "test": "NODE_ENV=test mocha --recursive 'test/**/*.spec.js'",
     "coverage": "NODE_ENV=test istanbul cover _mocha -- --recursive"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/munogu/node-maildir-queue.git"
+  },
   "author": "Eymen Gunay <eymen@egunay.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/munogu/node-maildir-queue/issues"
+  },
+  "homepage": "https://github.com/munogu/node-maildir-queue#readme",
   "dependencies": {
     "debug": "^3.1.0",
     "fs-extra": "^5.0.0",
