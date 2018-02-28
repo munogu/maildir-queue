@@ -64,7 +64,7 @@ describe('queue', function () {
       return queue.pop(item => {
         throw new Error('item failed')
       }).catch(err => {
-        assert.isObject(err.item)
+        assert.isObject(err.envelope)
       })
     })
     it('item expired ttl', function () {
