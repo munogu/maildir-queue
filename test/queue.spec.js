@@ -94,6 +94,9 @@ describe('queue', function () {
         assert.equal(unique.length, ids.length)
       })
     })
+    it('empty', function () {
+      return queue.empty()
+    })
   })
   describe('no retry', function () {
     let queue

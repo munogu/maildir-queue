@@ -90,6 +90,16 @@ queue.count().then(count => {
 })
 ```
 
+### empty() - Promise
+
+Deletes all expired items according to `ttl` setting.
+
+```javascript
+queue.empty().then(() => {
+  console.log('queue emptied successfully!')
+})
+```
+
 ## Debugging
 
 Maildir queue along with many of the libraries it's built with support the **DEBUG** environment variable from [debug][debug-url] which provides simple conditional logging.
