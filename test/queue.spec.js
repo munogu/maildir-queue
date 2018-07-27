@@ -95,7 +95,19 @@ describe('queue', function () {
       })
     })
     it('empty', function () {
-      return queue.empty()
+      let past = new Date('1970-01-01')
+
+      return queue.add({ 
+        hello: 'world',
+        createdAt: past,
+        updatedAt: past
+      }).then(() => {
+        return queue.count().then(count => {
+          assert.isAbove(count, 0)
+        })
+      }).then(() => queue.empty()).then(() => queue.count(count => {
+        assert.equal(count, 0)
+      }))
     })
   })
   describe('no retry', function () {
